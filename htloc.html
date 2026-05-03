@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plain HELOC Strategy — A Beginner's Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fafaf7;
+    color: #1c1c1c;
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    font-size: 18px;
+    line-height: 1.7;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 64px 32px 120px;
+  }
+  @media (max-width: 640px) {
+    .container { padding: 36px 20px 80px; }
+    body { font-size: 17px; }
+  }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    margin-bottom: 72px;
+    padding-bottom: 56px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #1d4a4a;
+    margin-bottom: 24px;
+  }
+  h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 52px;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0 0 24px;
+    font-variation-settings: 'opsz' 144;
+  }
+  @media (max-width: 640px) { h1 { font-size: 38px; } }
+  .subtitle {
+    font-size: 20px;
+    line-height: 1.5;
+    color: #5a5a5a;
+    max-width: 560px;
+    margin: 0 auto;
+    font-style: italic;
+  }
+
+  /* Table of contents */
+  .toc {
+    background: #f0eee8;
+    border-radius: 4px;
+    padding: 28px 36px;
+    margin-bottom: 64px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+  }
+  .toc-title {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 11px;
+    color: #8a8a8a;
+    margin-bottom: 16px;
+  }
+  .toc ol { margin: 0; padding-left: 28px; line-height: 2; }
+  .toc a {
+    color: #1c1c1c;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s;
+  }
+  .toc a:hover { border-bottom-color: #1d4a4a; }
+
+  /* Section markers */
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #1d4a4a;
+    margin-bottom: 10px;
+  }
+  h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    margin: 0 0 8px;
+    color: #1c1c1c;
+  }
+  @media (max-width: 640px) { h2 { font-size: 28px; } }
+  .h2-sub {
+    font-style: italic;
+    color: #5a5a5a;
+    margin: 0 0 40px;
+    font-size: 18px;
+  }
+  h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.3;
+    margin: 48px 0 12px;
+    color: #1c1c1c;
+  }
+  h4 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 28px 0 8px;
+    color: #1c1c1c;
+  }
+
+  p { margin: 0 0 18px; }
+  p strong, li strong { font-weight: 600; color: #1c1c1c; }
+  ul, ol { margin: 0 0 24px; padding-left: 26px; }
+  li { margin-bottom: 8px; }
+
+  code, .mono {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.88em;
+    background: #f0eee8;
+    padding: 2px 7px;
+    border-radius: 3px;
+    color: #1c1c1c;
+  }
+
+  /* Example callouts */
+  .example {
+    background: #f5f1e8;
+    border-left: 3px solid #1d4a4a;
+    padding: 22px 28px;
+    margin: 28px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .example-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #1d4a4a;
+    margin-bottom: 12px;
+  }
+  .example p:last-child { margin-bottom: 0; }
+  .example ul, .example ol { margin-bottom: 0; }
+
+  /* Verdict boxes */
+  .verdict {
+    padding: 22px 28px;
+    margin: 36px 0;
+    border-radius: 4px;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  .verdict.bad { background: #f5e8e6; color: #6b2828; }
+  .verdict.good { background: #e8f0e0; color: #2d5a1d; }
+  .verdict.warn { background: #f5ebd9; color: #7a5a14; }
+  .verdict-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+  .verdict strong { font-weight: 600; }
+
+  /* Pull quote */
+  blockquote {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.5;
+    color: #1c1c1c;
+    margin: 36px 0;
+    padding: 0 0 0 28px;
+    border-left: 3px solid #1d4a4a;
+    font-weight: 400;
+  }
+  blockquote p { margin: 0; }
+
+  /* Side-by-side comparison */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 28px 0;
+  }
+  @media (max-width: 600px) {
+    .compare { grid-template-columns: 1fr; }
+  }
+  .compare-card {
+    background: #f5f1e8;
+    border-radius: 4px;
+    padding: 20px 22px;
+  }
+  .compare-card.danger {
+    background: #f5e8e6;
+  }
+  .compare-card.success {
+    background: #e8f0e0;
+  }
+  .compare-card .ttl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #1d4a4a;
+    margin-bottom: 10px;
+  }
+  .compare-card.danger .ttl { color: #8b3a3a; }
+  .compare-card.success .ttl { color: #2d5a1d; }
+  .compare-card h4 {
+    margin: 0 0 12px;
+    font-size: 16px;
+  }
+  .compare-card ul {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .compare-card li { margin-bottom: 4px; }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; margin: 32px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+    font-family: 'Source Serif 4', Georgia, serif;
+  }
+  th, td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    vertical-align: top;
+  }
+  th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #5a5a5a;
+    font-weight: 500;
+    border-bottom: 1.5px solid rgba(0,0,0,0.18);
+  }
+  tr:hover td { background: rgba(29,74,74,0.03); }
+
+  /* Section divider */
+  hr.divider {
+    border: none;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    margin: 88px 0;
+  }
+
+  /* Step blocks */
+  .step { margin: 24px 0; padding-left: 0; }
+  .step-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: #1d4a4a;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .step-title {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 600;
+    font-size: 17px;
+    margin: 0 0 6px;
+    color: #1c1c1c;
+  }
+
+  /* ============ CALCULATOR ============ */
+  .calc-section {
+    background: #f0eee8;
+    border-radius: 6px;
+    padding: 32px 28px;
+    margin: 40px 0;
+    font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+  }
+  @media (max-width: 600px) { .calc-section { padding: 24px 18px; } }
+
+  .calc-section .section-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8a8a8a;
+    margin: 24px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .calc-section .section-title:first-child { margin-top: 0; }
+
+  .calc-row { margin-bottom: 16px; }
+  .calc-row label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 14px;
+    color: #5a5a5a;
+    margin-bottom: 8px;
+  }
+  .calc-row label .v {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    color: #1c1c1c;
+    font-size: 14px;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    height: 4px;
+    background: rgba(0,0,0,0.12);
+    border-radius: 2px;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #1d4a4a;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #f0eee8;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+    transition: transform 0.1s;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); }
+  input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: #1d4a4a;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #f0eee8;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+  }
+
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 8px;
+  }
+  @media (max-width: 600px) {
+    .scenario-grid { grid-template-columns: 1fr; }
+  }
+  .scenario {
+    background: #fafaf7;
+    border-radius: 4px;
+    padding: 18px 20px;
+  }
+  .scenario .stitle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #1d4a4a;
+    margin-bottom: 4px;
+  }
+  .scenario .sname {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 14px;
+    color: #1c1c1c;
+  }
+  .scenario .stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    font-size: 14px;
+  }
+  .scenario .stat:last-child { border-bottom: none; }
+  .scenario .stat .lbl { color: #5a5a5a; }
+  .scenario .stat .val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    color: #1c1c1c;
+  }
+
+  .winner-box {
+    margin-top: 18px;
+    padding: 18px 22px;
+    border-radius: 4px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .winner-box.b-wins { background: #e8f0e0; color: #2d5a1d; }
+  .winner-box.a-wins { background: #f5ebd9; color: #7a5a14; }
+  .winner-box.tie { background: #f0eee8; color: #5a5a5a; }
+  .winner-box .wlabel {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+  .winner-box strong { font-weight: 600; }
+
+  /* Footer */
+  footer {
+    margin-top: 96px;
+    padding-top: 36px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    font-size: 14px;
+    color: #8a8a8a;
+    font-style: italic;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  ::selection { background: #1d4a4a; color: #fafaf7; }
+
+  @media print {
+    body { font-size: 11pt; background: white; }
+    .toc { page-break-after: always; }
+    h2 { page-break-after: avoid; }
+    .verdict, .example, blockquote { page-break-inside: avoid; }
+    .calc-section { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="hero">
+    <div class="eyebrow">Personal Finance · Canada</div>
+    <h1>The Plain HELOC Strategy</h1>
+    <p class="subtitle">Using a HELOC for mortgage payoff without the paycheck-parking gimmick. Also called "HELOC chunking" or "lump-sum acceleration."</p>
+  </header>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li><a href="#part-1">What it is</a></li>
+      <li><a href="#part-2">How it works</a></li>
+      <li><a href="#part-3">Why people think it works</a></li>
+      <li><a href="#part-4">The actual math</a></li>
+      <li><a href="#part-5">When it makes sense</a></li>
+      <li><a href="#part-6">When to skip it</a></li>
+      <li><a href="#part-7">Honest verdict</a></li>
+      <li><a href="#calculator">Comparison calculator</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============ PART 1 ============ -->
+  <section id="part-1">
+    <div class="section-num">Part 1</div>
+    <h2>What it is</h2>
+    <p class="h2-sub">The HELOC strategy stripped down to its core mechanic.</p>
+
+    <p>The plain HELOC strategy (often called <strong>HELOC chunking</strong>) drops the paycheck-parking trick from velocity banking and keeps just one move: borrow a lump sum from your HELOC, dump it on your mortgage principal, and pay the HELOC down from your monthly cash flow surplus.</p>
+
+    <p>Once the HELOC is paid back to zero, you take another lump sum and repeat. The cycle continues until the mortgage is gone.</p>
+
+    <blockquote>
+      <p>"I'll borrow $20,000 from my HELOC, smash it onto my mortgage principal, then aggressively pay back the HELOC. Repeat every 14 months. My 25-year mortgage is gone in 8."</p>
+    </blockquote>
+
+    <p>It feels powerful. It looks aggressive. The math says otherwise.</p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PART 2 ============ -->
+  <section id="part-2">
+    <div class="section-num">Part 2</div>
+    <h2>How it works</h2>
+    <p class="h2-sub">A concrete example with round numbers.</p>
+
+    <div class="example">
+      <div class="example-label">Setup</div>
+      <ul>
+        <li>Mortgage: $400,000 at 5%, 25-year amortization</li>
+        <li>Monthly mortgage payment: ~$2,330</li>
+        <li>HELOC limit: $50,000 at 6%</li>
+        <li>Monthly cash flow surplus: $1,500</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 1</div>
+      <h4 class="step-title">Take a chunk from HELOC, smash the mortgage</h4>
+      <p>Borrow $20,000 from HELOC. Apply directly to mortgage principal as a lump-sum prepayment.</p>
+      <p>Mortgage drops from $400,000 to $380,000. HELOC balance is now $20,000.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 2</div>
+      <h4 class="step-title">Continue mortgage payments + aggressively pay HELOC</h4>
+      <p>Each month: make your regular $2,330 mortgage payment AND send your full $1,500 surplus to the HELOC.</p>
+      <p>HELOC interest accumulates daily — but the balance shrinks every month.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 3</div>
+      <h4 class="step-title">HELOC paid off, repeat</h4>
+      <p>After roughly 14 months, the HELOC balance is back to $0. Total HELOC interest paid: about $700.</p>
+      <p>Now take another $20,000 chunk, smash the mortgage again, restart the cycle.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 4</div>
+      <h4 class="step-title">Continue until mortgage is gone</h4>
+      <p>You'll do this cycle ~15–18 times over 12–14 years instead of paying for the full 25.</p>
+    </div>
+
+    <p>That's the entire strategy. No paycheck juggling, no using the HELOC as a chequing account. Just chunks in, surplus out.</p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PART 3 ============ -->
+  <section id="part-3">
+    <div class="section-num">Part 3</div>
+    <h2>Why people think it works</h2>
+    <p class="h2-sub">The intuition is compelling — and incomplete.</p>
+
+    <p>The argument from the YouTube videos and forum posts goes like this:</p>
+
+    <blockquote>
+      <p>"Mortgage interest is calculated on the entire balance, every single month, for 25 to 30 years. By killing $20,000 of principal right now, I just saved myself decades of compounding interest. The HELOC interest I pay over 14 months is nothing compared to that."</p>
+    </blockquote>
+
+    <p>The first half of that sentence is true. The second half is true on its own. But put together, they conceal a subtle error.</p>
+
+    <h3>The hidden assumption</h3>
+    <p>The argument assumes the only alternative to chunking is doing nothing — paying the mortgage on its normal 25-year schedule. Compared to that baseline, chunking does save a lot of interest.</p>
+
+    <p>But that's the wrong baseline. The real comparison is:</p>
+    <ul>
+      <li><strong>Strategy A — HELOC chunking:</strong> Send $1,500/month surplus to the HELOC after taking a chunk</li>
+      <li><strong>Strategy B — Direct extra payments:</strong> Send $1,500/month surplus directly to the mortgage</li>
+    </ul>
+
+    <p>Both strategies use the same amount of cash flow. Both end up paying off the mortgage years faster than the 25-year baseline. The question is: <strong>which one does it more efficiently?</strong></p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PART 4 ============ -->
+  <section id="part-4">
+    <div class="section-num">Part 4</div>
+    <h2>The actual math</h2>
+    <p class="h2-sub">A side-by-side walk-through using the same example.</p>
+
+    <p>Both scenarios start with the same $400,000 mortgage at 5% and the same $1,500/month surplus. Let's compare what happens after the first 14 months.</p>
+
+    <div class="compare">
+      <div class="compare-card danger">
+        <div class="ttl">Scenario A</div>
+        <h4>HELOC Chunking</h4>
+        <ul>
+          <li>Month 0: Take $20K from HELOC, apply to mortgage. Mortgage: $380K. HELOC: $20K.</li>
+          <li>Months 1–14: Normal mortgage payment + $1,500/month to HELOC.</li>
+          <li>Month 14: HELOC balance = $0. Mortgage ≈ $369,400.</li>
+          <li>HELOC interest paid: ~$700</li>
+          <li>Mortgage interest paid: ~$21,900</li>
+          <li><strong>Total interest paid: ~$22,600</strong></li>
+        </ul>
+      </div>
+      <div class="compare-card success">
+        <div class="ttl">Scenario B</div>
+        <h4>Direct Extra Payments</h4>
+        <ul>
+          <li>Month 0: No HELOC. Just normal mortgage.</li>
+          <li>Months 1–14: Normal mortgage payment + $1,500/month directly to mortgage principal.</li>
+          <li>Month 14: Mortgage ≈ $368,400.</li>
+          <li>HELOC interest paid: $0</li>
+          <li>Mortgage interest paid: ~$22,400</li>
+          <li><strong>Total interest paid: ~$22,400</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>What this shows</h3>
+
+    <p>After 14 months, both scenarios end up at almost the same place:</p>
+    <ul>
+      <li>Roughly identical mortgage balance (B is about $1,000 lower)</li>
+      <li>Roughly identical total interest paid (B is about $200 lower)</li>
+      <li>Same total cash spent</li>
+    </ul>
+
+    <p>The difference is small but consistently in B's favor — by approximately the amount of HELOC interest you paid in A. Run this for the full 12–14 years it takes to pay off the mortgage and the gap compounds to <strong>$3,000–$8,000 saved by direct extra payments versus chunking.</strong></p>
+
+    <h3>Why this happens</h3>
+
+    <p>In Scenario A, your $20K lump sum reduces mortgage principal at month 0. That earns you interest savings over the 14-month cycle. Good.</p>
+
+    <p>But your $1,500/month surplus is going to the HELOC, not the mortgage — so the mortgage is amortizing slowly during those 14 months.</p>
+
+    <p>In Scenario B, your $1,500/month goes straight to the mortgage. There's no big upfront drop, but each month's $1,500 starts saving interest immediately.</p>
+
+    <p>By month 14, the cumulative principal reduction in B (~$21K) actually slightly exceeds A's $20K lump. And B never paid HELOC interest. <strong>B wins by a small but real margin every single time HELOC rate ≥ mortgage rate.</strong></p>
+
+    <h3>The general rule</h3>
+    <p>The cost of HELOC chunking is approximately:</p>
+    <p><code>Total HELOC interest paid over the life of the strategy</code></p>
+    <p>If you did 15 chunks of $20K each, paying ~$700 in HELOC interest per cycle, that's <strong>~$10,500 in extra interest paid for nothing</strong> compared to direct extra payments.</p>
+
+    <p>This flips only if HELOC rate is meaningfully <em>lower</em> than mortgage rate — rare in Canada, since HELOCs are usually Prime + 0.5%–1% and mortgages are typically near or below Prime.</p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PART 5 ============ -->
+  <section id="part-5">
+    <div class="section-num">Part 5</div>
+    <h2>When it makes sense</h2>
+    <p class="h2-sub">Three legitimate cases where chunking beats direct payments.</p>
+
+    <h3>1. Your mortgage caps prepayments</h3>
+    <p>Many closed Canadian mortgages limit annual prepayment to 10–20% of the original balance. If you have surplus cash flow that exceeds that cap, chunking lets you put it to work anyway.</p>
+
+    <div class="example">
+      <div class="example-label">Example</div>
+      <p>Original mortgage: $500,000. Prepayment cap: 15% per year = $75,000.<br>
+      You have $100,000 in surplus this year. The mortgage will only let you apply $75,000.<br>
+      Chunking: take $25,000 from HELOC, pay to mortgage immediately under the cap, then pay HELOC down with future surplus. Wait for next year, repeat.</p>
+    </div>
+
+    <h3>2. HELOC rate is below mortgage rate</h3>
+    <p>If your HELOC is genuinely cheaper than your mortgage (rare, but possible if you have a high-rate mortgage and a great HELOC), every dollar moved temporarily to the HELOC saves you the rate difference.</p>
+
+    <p>Verify by checking both rates. If HELOC ≥ mortgage, this case doesn't apply.</p>
+
+    <h3>3. You need the discipline structure</h3>
+    <p>Some people pay down a HELOC balance more aggressively than they would make extra mortgage payments. The visible "debt to clear" creates urgency.</p>
+
+    <p>This is a real psychological effect. But it costs you the HELOC interest as a "discipline tax." A free alternative: set up an automatic biweekly accelerated mortgage payment plus a fixed monthly prepayment — same forced behaviour, zero HELOC fees.</p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PART 6 ============ -->
+  <section id="part-6">
+    <div class="section-num">Part 6</div>
+    <h2>When to skip it</h2>
+    <p class="h2-sub">The default answer for most Canadian mortgages.</p>
+
+    <ul>
+      <li><strong>Your mortgage allows unlimited prepayment</strong> — most variable-rate mortgages and many fixed-rate ones do. Just make extra payments directly.</li>
+      <li><strong>HELOC rate is higher than mortgage rate</strong> — the rate spread eats your savings.</li>
+      <li><strong>You don't have stable surplus cash flow</strong> — chunking works only if you can reliably pay down the HELOC each month. Variable income makes this dangerous.</li>
+      <li><strong>You already make extra mortgage payments</strong> — adding the HELOC step just creates extra interest cost without changing anything else.</li>
+      <li><strong>You don't have a healthy emergency fund</strong> — taking $20K from your HELOC reduces your available emergency credit. If something goes wrong, you've lost your buffer.</li>
+    </ul>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PART 7 ============ -->
+  <section id="part-7">
+    <div class="section-num">Part 7</div>
+    <h2>How it compares to the alternatives</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Strategy</th>
+            <th>Effort</th>
+            <th>Risk</th>
+            <th>Net effect vs do-nothing</th>
+            <th>Net effect vs direct extra payments</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Plain HELOC chunking</td><td>Medium</td><td>Low</td><td>Big positive</td><td>Slightly negative (HELOC interest cost)</td></tr>
+          <tr><td>HELOC velocity banking</td><td>High</td><td>Medium</td><td>Big positive</td><td>Slightly negative (HELOC interest cost)</td></tr>
+          <tr><td>Biweekly accelerated payments</td><td>None</td><td>None</td><td>Saves 3–4 years</td><td>Equivalent</td></tr>
+          <tr><td>Direct extra payments</td><td>None</td><td>None</td><td>Saves 5–10 years</td><td>—</td></tr>
+          <tr><td>Smith Manoeuvre</td><td>High</td><td>High</td><td>Builds wealth + payoff</td><td>Different goal entirely</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Plain HELOC chunking is strictly better than velocity banking (less complexity, no paycheck juggling) but strictly worse than just making direct extra payments.</p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ VERDICT ============ -->
+  <section>
+    <div class="section-num">Verdict</div>
+    <h2>The honest bottom line</h2>
+
+    <div class="verdict bad">
+      <div class="verdict-label">Skip in most cases</div>
+      <p style="margin:0;"><strong>If your mortgage allows prepayments, just send your surplus directly to the mortgage.</strong> Same outcome, no HELOC interest paid, less complexity, and your HELOC stays available as an emergency credit line.</p>
+    </div>
+
+    <div class="verdict warn">
+      <div class="verdict-label">Use only if</div>
+      <p style="margin:0;">Your closed mortgage has a hard prepayment cap that you're hitting every year, AND you have surplus cash flow above that cap. In that narrow case, chunking lets you put the extra money to work — at the cost of HELOC interest.</p>
+    </div>
+
+    <p>The next section lets you test these claims with your own numbers. Move the sliders and watch which strategy wins.</p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ CALCULATOR ============ -->
+  <section id="calculator">
+    <div class="section-num">Interactive</div>
+    <h2>Comparison calculator</h2>
+    <p class="h2-sub">Plain HELOC chunking versus direct extra payments — same cash flow, side by side.</p>
+
+    <div class="calc-section">
+      <div class="section-title">Inputs</div>
+
+      <div class="calc-row">
+        <label><span>Mortgage balance</span><span class="v" id="c-mb-out">$400,000</span></label>
+        <input type="range" id="c-mb" min="100000" max="1000000" step="10000" value="400000">
+      </div>
+      <div class="calc-row">
+        <label><span>Mortgage rate</span><span class="v" id="c-mr-out">5.00%</span></label>
+        <input type="range" id="c-mr" min="2" max="9" step="0.25" value="5">
+      </div>
+      <div class="calc-row">
+        <label><span>Original amortization</span><span class="v" id="c-yr-out">25 years</span></label>
+        <input type="range" id="c-yr" min="10" max="30" step="1" value="25">
+      </div>
+      <div class="calc-row">
+        <label><span>HELOC rate</span><span class="v" id="c-hr-out">6.00%</span></label>
+        <input type="range" id="c-hr" min="2" max="10" step="0.25" value="6">
+      </div>
+      <div class="calc-row">
+        <label><span>Monthly surplus cash flow</span><span class="v" id="c-sp-out">$1,500</span></label>
+        <input type="range" id="c-sp" min="500" max="5000" step="100" value="1500">
+      </div>
+      <div class="calc-row">
+        <label><span>Chunk size (Scenario A only)</span><span class="v" id="c-ck-out">$20,000</span></label>
+        <input type="range" id="c-ck" min="5000" max="100000" step="1000" value="20000">
+      </div>
+
+      <div class="section-title">Results</div>
+
+      <div class="scenario-grid">
+        <div class="scenario">
+          <div class="stitle">Scenario A</div>
+          <div class="sname">HELOC chunking</div>
+          <div class="stat"><span class="lbl">Years to payoff</span><span class="val" id="a-years">—</span></div>
+          <div class="stat"><span class="lbl">Total mortgage interest</span><span class="val" id="a-mort">—</span></div>
+          <div class="stat"><span class="lbl">Total HELOC interest</span><span class="val" id="a-heloc">—</span></div>
+          <div class="stat"><span class="lbl">Total interest paid</span><span class="val" id="a-total">—</span></div>
+        </div>
+        <div class="scenario">
+          <div class="stitle">Scenario B</div>
+          <div class="sname">Direct extra payments</div>
+          <div class="stat"><span class="lbl">Years to payoff</span><span class="val" id="b-years">—</span></div>
+          <div class="stat"><span class="lbl">Total mortgage interest</span><span class="val" id="b-mort">—</span></div>
+          <div class="stat"><span class="lbl">Total HELOC interest</span><span class="val" id="b-heloc">$0</span></div>
+          <div class="stat"><span class="lbl">Total interest paid</span><span class="val" id="b-total">—</span></div>
+        </div>
+      </div>
+
+      <div class="winner-box" id="winner"></div>
+    </div>
+
+    <p style="font-size: 14px; color: #8a8a8a; font-style: italic; margin-top: 24px;">Both scenarios use identical cash flow ($1,500/month surplus by default). The simulation runs monthly until the mortgage and HELOC are both at zero. Comparison is apples-to-apples: same amount of cash spent, same starting position, only the strategy differs.</p>
+  </section>
+
+  <footer>
+    This guide is educational and not financial advice. Mortgage prepayment rules and HELOC terms vary by lender — check your actual mortgage agreement before applying any strategy.
+  </footer>
+
+</div>
+
+<script>
+function fmt(n) {
+  return '$' + Math.round(n).toLocaleString();
+}
+
+function simChunking(mortBal0, mortRate, mortYears, helocRate, surplus, chunkSize) {
+  const r = mortRate / 12;
+  const hr = helocRate / 12;
+  const origN = mortYears * 12;
+  const payment = mortBal0 * (r * Math.pow(1+r, origN)) / (Math.pow(1+r, origN) - 1);
+
+  let mortBal = mortBal0;
+  let helocBal = 0;
+  let totalMortInt = 0;
+  let totalHelocInt = 0;
+  let months = 0;
+  const maxMonths = 600;
+
+  while ((mortBal > 0.01 || helocBal > 0.01) && months < maxMonths) {
+    months++;
+
+    // Take new chunk if HELOC is empty and there's still mortgage to attack
+    if (helocBal < 0.01 && mortBal > 0) {
+      const chunk = Math.min(chunkSize, mortBal);
+      mortBal -= chunk;
+      helocBal = chunk;
+    }
+
+    // Mortgage interest + payment
+    if (mortBal > 0) {
+      const mortInt = mortBal * r;
+      totalMortInt += mortInt;
+      const mortPrin = Math.min(payment - mortInt, mortBal);
+      mortBal -= mortPrin;
+      if (mortBal < 0) mortBal = 0;
+    }
+
+    // HELOC interest + paydown from surplus
+    if (helocBal > 0) {
+      const helocInt = helocBal * hr;
+      totalHelocInt += helocInt;
+      helocBal += helocInt;
+
+      const helocPay = Math.min(surplus, helocBal);
+      helocBal -= helocPay;
+      if (helocBal < 0.01) helocBal = 0;
+    } else if (mortBal > 0) {
+      // Surplus to mortgage if HELOC is gone
+      const extra = Math.min(surplus, mortBal);
+      mortBal -= extra;
+    }
+  }
+
+  return {
+    months,
+    mortInt: totalMortInt,
+    helocInt: totalHelocInt,
+    totalInt: totalMortInt + totalHelocInt
+  };
+}
+
+function simDirect(mortBal0, mortRate, mortYears, surplus) {
+  const r = mortRate / 12;
+  const origN = mortYears * 12;
+  const payment = mortBal0 * (r * Math.pow(1+r, origN)) / (Math.pow(1+r, origN) - 1);
+
+  let bal = mortBal0;
+  let totalInt = 0;
+  let months = 0;
+  const maxMonths = 600;
+
+  while (bal > 0.01 && months < maxMonths) {
+    months++;
+    const int = bal * r;
+    totalInt += int;
+    const prin = Math.min(payment - int + surplus, bal);
+    bal -= prin;
+    if (bal < 0) bal = 0;
+  }
+
+  return { months, mortInt: totalInt, helocInt: 0, totalInt };
+}
+
+function calcCompare() {
+  const $ = id => document.getElementById(id);
+  const mb = +$('c-mb').value;
+  const mr = +$('c-mr').value / 100;
+  const yr = +$('c-yr').value;
+  const hr = +$('c-hr').value / 100;
+  const sp = +$('c-sp').value;
+  const ck = +$('c-ck').value;
+
+  $('c-mb-out').textContent = '$' + mb.toLocaleString();
+  $('c-mr-out').textContent = (mr*100).toFixed(2) + '%';
+  $('c-yr-out').textContent = yr + ' years';
+  $('c-hr-out').textContent = (hr*100).toFixed(2) + '%';
+  $('c-sp-out').textContent = '$' + sp.toLocaleString();
+  $('c-ck-out').textContent = '$' + ck.toLocaleString();
+
+  const a = simChunking(mb, mr, yr, hr, sp, ck);
+  const b = simDirect(mb, mr, yr, sp);
+
+  $('a-years').textContent = (a.months/12).toFixed(1) + ' yrs';
+  $('a-mort').textContent = fmt(a.mortInt);
+  $('a-heloc').textContent = fmt(a.helocInt);
+  $('a-total').textContent = fmt(a.totalInt);
+
+  $('b-years').textContent = (b.months/12).toFixed(1) + ' yrs';
+  $('b-mort').textContent = fmt(b.mortInt);
+  $('b-total').textContent = fmt(b.totalInt);
+
+  const w = $('winner');
+  const diff = a.totalInt - b.totalInt;
+  const monthDiff = a.months - b.months;
+  const diffYrs = (Math.abs(monthDiff)/12).toFixed(1);
+
+  if (Math.abs(diff) < 100) {
+    w.className = 'winner-box tie';
+    w.innerHTML = '<div class="wlabel">Result</div><strong>Effectively a tie.</strong> Both strategies produce nearly identical results with these inputs. Either works.';
+  } else if (diff > 0) {
+    w.className = 'winner-box b-wins';
+    w.innerHTML = '<div class="wlabel">Direct extra payments win</div><strong>Scenario B saves ' + fmt(diff) + '</strong> in total interest compared to HELOC chunking, and pays off ' + (monthDiff > 0 ? diffYrs + ' years sooner' : 'in similar time') + '. The HELOC chunking strategy costs you ' + fmt(a.helocInt) + ' in HELOC interest with no benefit at these rates.';
+  } else {
+    w.className = 'winner-box a-wins';
+    w.innerHTML = '<div class="wlabel">HELOC chunking wins</div><strong>Scenario A saves ' + fmt(Math.abs(diff)) + '</strong> in total interest. This usually only happens when HELOC rate is meaningfully below mortgage rate. Verify your actual rates before relying on this result.';
+  }
+}
+
+['c-mb','c-mr','c-yr','c-hr','c-sp','c-ck'].forEach(id => {
+  document.getElementById(id).addEventListener('input', calcCompare);
+});
+calcCompare();
+</script>
+</body>
+</html>
