@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mortgage Payoff Strategies — A Beginner's Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fafaf7;
+    color: #1c1c1c;
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    font-size: 18px;
+    line-height: 1.7;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 64px 32px 120px;
+  }
+  @media (max-width: 640px) {
+    .container { padding: 36px 20px 80px; }
+    body { font-size: 17px; }
+  }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    margin-bottom: 72px;
+    padding-bottom: 56px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #1d4a4a;
+    margin-bottom: 24px;
+  }
+  h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 52px;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0 0 24px;
+    font-variation-settings: 'opsz' 144;
+  }
+  @media (max-width: 640px) { h1 { font-size: 38px; } }
+  .subtitle {
+    font-size: 20px;
+    line-height: 1.5;
+    color: #5a5a5a;
+    max-width: 560px;
+    margin: 0 auto;
+    font-style: italic;
+  }
+
+  /* Table of contents */
+  .toc {
+    background: #f0eee8;
+    border-radius: 4px;
+    padding: 28px 36px;
+    margin-bottom: 64px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+  }
+  .toc-title {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 11px;
+    color: #8a8a8a;
+    margin-bottom: 16px;
+  }
+  .toc ol { margin: 0; padding-left: 28px; line-height: 2; }
+  .toc a {
+    color: #1c1c1c;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s;
+  }
+  .toc a:hover { border-bottom-color: #1d4a4a; }
+
+  /* Section markers */
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #1d4a4a;
+    margin-bottom: 10px;
+  }
+  h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    margin: 0 0 8px;
+    color: #1c1c1c;
+  }
+  @media (max-width: 640px) { h2 { font-size: 28px; } }
+  .h2-sub {
+    font-style: italic;
+    color: #5a5a5a;
+    margin: 0 0 40px;
+    font-size: 18px;
+  }
+  h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.3;
+    margin: 48px 0 12px;
+    color: #1c1c1c;
+  }
+  h4 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 28px 0 8px;
+    color: #1c1c1c;
+  }
+
+  p { margin: 0 0 18px; }
+  p strong, li strong { font-weight: 600; color: #1c1c1c; }
+  ul, ol { margin: 0 0 24px; padding-left: 26px; }
+  li { margin-bottom: 8px; }
+
+  code, .mono {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.88em;
+    background: #f0eee8;
+    padding: 2px 7px;
+    border-radius: 3px;
+    color: #1c1c1c;
+  }
+
+  /* Example callouts */
+  .example {
+    background: #f5f1e8;
+    border-left: 3px solid #1d4a4a;
+    padding: 22px 28px;
+    margin: 28px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .example-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #1d4a4a;
+    margin-bottom: 12px;
+  }
+  .example p:last-child { margin-bottom: 0; }
+  .example ul, .example ol { margin-bottom: 0; }
+
+  /* Verdict boxes */
+  .verdict {
+    padding: 22px 28px;
+    margin: 36px 0;
+    border-radius: 4px;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  .verdict.bad { background: #f5e8e6; color: #6b2828; }
+  .verdict.good { background: #e8f0e0; color: #2d5a1d; }
+  .verdict.warn { background: #f5ebd9; color: #7a5a14; }
+  .verdict-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+  .verdict strong { font-weight: 600; }
+
+  /* Pull quote */
+  blockquote {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.5;
+    color: #1c1c1c;
+    margin: 36px 0;
+    padding: 0 0 0 28px;
+    border-left: 3px solid #1d4a4a;
+    font-weight: 400;
+  }
+  blockquote p { margin: 0; }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; margin: 32px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+    font-family: 'Source Serif 4', Georgia, serif;
+  }
+  th, td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    vertical-align: top;
+  }
+  th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #5a5a5a;
+    font-weight: 500;
+    border-bottom: 1.5px solid rgba(0,0,0,0.18);
+  }
+  tr:hover td { background: rgba(29,74,74,0.03); }
+
+  /* Section divider */
+  hr.divider {
+    border: none;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    margin: 88px 0;
+  }
+
+  /* FAQ */
+  .faq-item {
+    padding: 22px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .faq-item:last-child { border-bottom: none; }
+  .faq-q {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 19px;
+    margin: 0 0 8px;
+    color: #1c1c1c;
+  }
+  .faq-a {
+    color: #5a5a5a;
+    margin: 0;
+    font-size: 17px;
+  }
+
+  /* Step blocks */
+  .step {
+    margin: 24px 0;
+    padding-left: 0;
+  }
+  .step-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: #1d4a4a;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .step-title {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 600;
+    font-size: 17px;
+    margin: 0 0 6px;
+    color: #1c1c1c;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 96px;
+    padding-top: 36px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    font-size: 14px;
+    color: #8a8a8a;
+    font-style: italic;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  /* Selection */
+  ::selection { background: #1d4a4a; color: #fafaf7; }
+
+  /* Print */
+  @media print {
+    body { font-size: 11pt; background: white; }
+    .toc { page-break-after: always; }
+    h2 { page-break-after: avoid; }
+    .verdict, .example, blockquote { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="hero">
+    <div class="eyebrow">Personal Finance · Canada</div>
+    <h1>Mortgage Payoff Strategies</h1>
+    <p class="subtitle">A beginner's guide to HELOC velocity banking and the Smith Manoeuvre, written for someone who doesn't already know the jargon.</p>
+  </header>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li><a href="#part-1">Concepts you need first</a></li>
+      <li><a href="#part-2">HELOC velocity banking</a></li>
+      <li><a href="#part-3">Smith Manoeuvre</a></li>
+      <li><a href="#part-4">Side-by-side comparison</a></li>
+      <li><a href="#part-5">Action checklist</a></li>
+      <li><a href="#part-6">Common questions</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============ PART 1 ============ -->
+  <section id="part-1">
+    <div class="section-num">Part 1</div>
+    <h2>Concepts you need first</h2>
+    <p class="h2-sub">Before either strategy makes sense, you need a few building blocks.</p>
+
+    <h3>What is a HELOC?</h3>
+    <p>HELOC stands for <strong>Home Equity Line of Credit</strong>. Think of it like a credit card backed by your house.</p>
+    <ul>
+      <li>The bank gives you a credit limit (typically up to 65–80% of home value minus your mortgage balance).</li>
+      <li>You can borrow, repay, and re-borrow as many times as you want without re-applying.</li>
+      <li>You only pay interest on the amount you've actually borrowed (the <em>balance</em>).</li>
+      <li>Interest is calculated <strong>daily</strong> on the current balance.</li>
+      <li>The interest rate is <strong>variable</strong> — it changes when prime rate changes.</li>
+    </ul>
+
+    <div class="example">
+      <div class="example-label">Example</div>
+      <ul>
+        <li>Home value: $700,000</li>
+        <li>Existing mortgage: $400,000</li>
+        <li>Bank allows 80% loan-to-value: $700,000 × 0.80 = $560,000</li>
+        <li>HELOC limit: $560,000 − $400,000 = <strong>$160,000 available to borrow</strong></li>
+      </ul>
+    </div>
+
+    <h3>What is a readvanceable mortgage?</h3>
+    <p>A regular mortgage <strong>and</strong> a HELOC bundled together, where they automatically rebalance.</p>
+    <p>The key feature: as you pay down mortgage principal, the HELOC limit <strong>automatically grows</strong> by the same amount. This is essential for the Smith Manoeuvre.</p>
+
+    <div class="example">
+      <div class="example-label">Example</div>
+      <ul>
+        <li>Month 0: Mortgage $500,000, HELOC limit $0</li>
+        <li>Month 12: You've paid down $12,000 of mortgage principal</li>
+        <li>Month 12: Mortgage $488,000, HELOC limit becomes $12,000</li>
+      </ul>
+      <p>You can now borrow up to $12,000 from the HELOC without applying for anything.</p>
+    </div>
+
+    <p>Common Canadian products: Scotia Total Equity Plan (STEP), TD Home Equity FlexLine, National Bank All-in-One, Manulife One.</p>
+
+    <h3>How HELOC interest is calculated</h3>
+    <p>Daily, on outstanding balance.</p>
+    <p>Formula: <code>balance × annual_rate × (days / 365)</code></p>
+
+    <div class="example">
+      <div class="example-label">Example</div>
+      <p>$10,000 balance at 6% for 30 days:<br>
+      $10,000 × 0.06 × (30/365) = <strong>$49.32</strong></p>
+      <p>This is why "parking" cash in a HELOC reduces interest — every day the balance is lower, you pay less.</p>
+    </div>
+
+    <h3>What "tax deductible" actually means</h3>
+    <p>In Canada, your tax bill = (your income) × (your tax rate). A "tax deduction" reduces the income figure.</p>
+
+    <div class="example">
+      <div class="example-label">Example</div>
+      <ul>
+        <li>You earn $100,000</li>
+        <li>Marginal tax rate: 40%</li>
+        <li>You owe roughly $30,000 in tax</li>
+        <li>You get a $5,000 deduction → income becomes $95,000</li>
+        <li>New tax: roughly $28,000</li>
+        <li><strong>You save $2,000</strong> ($5,000 × 40%)</li>
+      </ul>
+    </div>
+
+    <p>The savings = deduction × marginal tax rate. Higher tax bracket = more value from the deduction.</p>
+
+    <h3>Why mortgage interest isn't deductible (but investment loan interest is)</h3>
+    <p>Canadian rule (Income Tax Act s. 20(1)(c)):</p>
+    <ul>
+      <li>Money you borrowed to live in (your house) → interest is <strong>NOT</strong> deductible</li>
+      <li>Money you borrowed to <strong>earn income</strong> (investments paying dividends/interest) → interest <strong>IS</strong> deductible</li>
+    </ul>
+    <p>This single rule is the entire foundation of the Smith Manoeuvre.</p>
+
+    <h3>What a marginal tax rate is</h3>
+    <p>The rate that applies to your <strong>next</strong> dollar of income — not your average rate.</p>
+    <p>Ontario, 2025 (combined federal + provincial), approximate brackets:</p>
+    <ul>
+      <li>$0–53K: ~20%</li>
+      <li>$53–106K: ~30%</li>
+      <li>$106–165K: ~37%</li>
+      <li>$165–235K: ~43%</li>
+      <li>$235K+: ~48–53%</li>
+    </ul>
+    <p>If you earn $150,000, your marginal rate is ~37–43%. Every extra dollar of income is taxed at that rate, and every dollar of deduction saves you that rate in tax.</p>
+
+    <h3>What a dividend ETF is and why it matters</h3>
+    <ul>
+      <li><strong>ETF</strong> = Exchange Traded Fund. A basket of stocks bought as one unit.</li>
+      <li><strong>Dividend ETF</strong> = an ETF holding companies that pay regular cash dividends.</li>
+      <li>Common Canadian examples: VDY, XEI, ZDV, CDZ.</li>
+      <li>Typical dividend yield: 3–5% per year (paid quarterly as cash).</li>
+    </ul>
+    <p><strong>Why it matters for the Smith Manoeuvre:</strong> the CRA requires that borrowed money produce <em>income</em> (not just price appreciation) for the interest to be deductible. Dividend-paying ETFs reliably produce income.</p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PART 2 ============ -->
+  <section id="part-2">
+    <div class="section-num">Part 2</div>
+    <h2>HELOC velocity banking</h2>
+    <p class="h2-sub">The strategy that goes viral on YouTube. Mostly hype.</p>
+
+    <h3>The pitch</h3>
+    <blockquote>
+      <p>"Use your HELOC as a chequing account. Park your paycheck in it. Pay all your bills from it. Periodically pay down the mortgage with HELOC funds. Pay off your 25-year mortgage in 7 years!"</p>
+    </blockquote>
+
+    <h3>How it's supposed to work, step by step</h3>
+
+    <div class="example">
+      <div class="example-label">Setup</div>
+      <ul>
+        <li>Mortgage: $400,000 at 5%</li>
+        <li>HELOC: $30,000 limit at 6%</li>
+        <li>Monthly take-home: $6,000</li>
+        <li>Monthly expenses: $4,500</li>
+        <li>Monthly surplus: $1,500</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 1</div>
+      <h4 class="step-title">Take a chunk from HELOC, smash the mortgage</h4>
+      <p>Borrow $20,000 from HELOC. Apply directly to mortgage principal.<br>
+      Now: Mortgage = $380,000, HELOC balance = $20,000</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 2</div>
+      <h4 class="step-title">Use HELOC as your primary bank account</h4>
+      <ul>
+        <li>Paycheck of $6,000 deposited into HELOC → balance drops to $14,000</li>
+        <li>Throughout the month, pay all bills from HELOC → balance creeps back up to ~$18,500</li>
+        <li>Net: HELOC reduced by $1,500 (your monthly surplus)</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 3</div>
+      <h4 class="step-title">Repeat</h4>
+      <p>Each month, HELOC balance net-drops by $1,500. After ~13 months, the $20,000 lump is paid off.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 4</div>
+      <h4 class="step-title">Repeat the whole cycle</h4>
+      <p>Take another $20,000 from HELOC, smash mortgage, repeat.</p>
+    </div>
+
+    <h3>Where the savings actually come from</h3>
+
+    <h4>Source 1: "Parking your paycheck reduces daily interest"</h4>
+    <p>Your $6,000 paycheck sits in the HELOC for ~15 days on average before you've spent it on bills.</p>
+    <p><code>$6,000 × 6% × (15/365) = $14.79 per month</code><br>
+    Annual: ~$177<br>
+    Over 25 years: ~$4,425</p>
+    <p>That's all this trick saves. About four grand over the life of the mortgage.</p>
+
+    <h4>Source 2: "Surplus paying down debt faster"</h4>
+    <p>Your $1,500/month surplus is now applied to debt instead of sitting in chequing. <strong>But this works whether you use a HELOC or just send the $1,500 directly to your mortgage as an extra payment.</strong></p>
+    <p>The HELOC adds nothing to this — except complexity and risk.</p>
+
+    <h3>Why it often makes the math worse</h3>
+    <p>HELOC rate (6%) is usually <strong>higher</strong> than mortgage rate (5%).</p>
+    <p>Carrying $20,000 on a 6% HELOC instead of a 5% mortgage costs you an extra:<br>
+    <code>$20,000 × 1% = $200/year</code> in extra interest</p>
+    <ul>
+      <li>You save $177/year from the parking trick</li>
+      <li>You pay $200/year extra in rate spread</li>
+      <li><strong>Net: −$23/year. You're actually losing money.</strong></li>
+    </ul>
+    <p>The strategy only "works" because it forces discipline you weren't applying before.</p>
+
+    <h3>Who actually does this</h3>
+    <ul>
+      <li>People who can't make extra payments without artificial constraints</li>
+      <li>People who watch finance YouTubers</li>
+      <li>People with HELOC rate ≤ mortgage rate (rare in Canada in normal rate environments)</li>
+    </ul>
+
+    <div class="verdict bad">
+      <div class="verdict-label">Honest verdict</div>
+      <p style="margin:0;"><strong>Skip it.</strong> Set up biweekly accelerated payments and apply your surplus directly to mortgage. Same outcome, zero rate-spread loss, zero risk of overspending.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PART 3 ============ -->
+  <section id="part-3">
+    <div class="section-num">Part 3</div>
+    <h2>Smith Manoeuvre</h2>
+    <p class="h2-sub">A legitimate Canadian wealth-building strategy. Not for everyone.</p>
+
+    <h3>The goal in one sentence</h3>
+    <p>Convert your mortgage into a tax-deductible investment loan, while building a parallel investment portfolio over 20–30 years.</p>
+
+    <h3>The legal foundation</h3>
+    <p><strong>Singleton v. Canada (Supreme Court, 2001).</strong> The court ruled that <strong>how you arrange your finances matters more than the order of cash flows.</strong> If you deliberately structure things so borrowed money is used for investment, the interest is deductible — even if the cash you "freed up" went toward your house.</p>
+    <p>This is settled law. It's not a loophole. The CRA accepts it when done correctly.</p>
+
+    <h3>Required ingredients</h3>
+    <ol>
+      <li><strong>Readvanceable mortgage</strong> (HELOC limit auto-grows as you pay principal)</li>
+      <li><strong>Discipline</strong> to invest every single month</li>
+      <li><strong>Non-registered investment account</strong> (not TFSA, not RRSP — those have separate tax rules)</li>
+      <li><strong>Income-producing investments</strong> (dividend ETFs, REITs, bond funds)</li>
+      <li><strong>Clean paper trail</strong> — separate HELOC sub-account used <em>only</em> for investing</li>
+    </ol>
+
+    <h3>The mechanics, step by step</h3>
+
+    <div class="example">
+      <div class="example-label">Starting state</div>
+      <ul>
+        <li>Home: $700,000</li>
+        <li>Readvanceable mortgage: $500,000 at 5%, 25-year amortization</li>
+        <li>Monthly payment: ~$2,910</li>
+        <li>Marginal tax rate: 40%</li>
+        <li>HELOC rate: 6%</li>
+      </ul>
+    </div>
+
+    <p><strong>Each month, you do this:</strong></p>
+    <ol>
+      <li>Make your normal mortgage payment ($2,910).</li>
+      <li>Some portion is principal (~$850 in month 1, growing each month). The HELOC limit grows by that amount.</li>
+      <li>You borrow that exact principal amount from the HELOC and invest it in a dividend ETF.</li>
+      <li>The HELOC interest accrues daily. You either let it capitalize or use dividends to cover it.</li>
+      <li>Once a year, you tell your accountant the total HELOC interest paid. They claim it as a deduction.</li>
+      <li>You get a tax refund worth (HELOC interest × your marginal rate).</li>
+      <li>Optionally, apply the refund directly to mortgage principal — this <strong>accelerates everything</strong>.</li>
+    </ol>
+
+    <h3>Year-by-year evolution</h3>
+    <p style="color:#5a5a5a; font-style:italic;">Round numbers, no accelerator.</p>
+
+    <div class="example">
+      <div class="example-label">End of year 1</div>
+      <ul>
+        <li>Mortgage paid down: ~$10,500</li>
+        <li>HELOC balance: ~$10,800</li>
+        <li>Investment portfolio: ~$11,000</li>
+        <li>HELOC interest paid: ~$330</li>
+        <li>Tax refund: $330 × 40% = <strong>~$132</strong></li>
+      </ul>
+    </div>
+
+    <div class="example">
+      <div class="example-label">End of year 5</div>
+      <ul>
+        <li>Mortgage paid down: ~$60,000</li>
+        <li>HELOC balance: ~$65,000</li>
+        <li>Investment portfolio: ~$78,000 (with 7% returns)</li>
+        <li>HELOC interest paid that year: ~$3,900</li>
+        <li>Tax savings that year: <strong>~$1,560</strong></li>
+      </ul>
+    </div>
+
+    <div class="example">
+      <div class="example-label">End of year 15</div>
+      <ul>
+        <li>Mortgage paid down: ~$240,000</li>
+        <li>HELOC balance: ~$280,000</li>
+        <li>Investment portfolio: ~$420,000</li>
+        <li>Annual HELOC interest: ~$16,800</li>
+        <li>Annual tax savings: <strong>~$6,720</strong></li>
+      </ul>
+    </div>
+
+    <div class="example">
+      <div class="example-label">End of year 25 (mortgage fully paid off)</div>
+      <ul>
+        <li>Mortgage: $0</li>
+        <li>HELOC balance: ~$500,000 (still tax-deductible)</li>
+        <li>Investment portfolio: ~$900,000–$1,200,000 (depends on returns)</li>
+        <li>Annual HELOC interest: ~$30,000</li>
+        <li>Annual tax savings: <strong>~$12,000</strong></li>
+      </ul>
+    </div>
+
+    <h3>Where the wealth actually comes from</h3>
+    <ol>
+      <li><strong>Leverage.</strong> You have ~$1,000,000 in stocks instead of $0 because you used borrowed money to invest for 25 years.</li>
+      <li><strong>Tax savings.</strong> Roughly $100,000–$150,000 in cumulative tax refunds over 25 years.</li>
+      <li><strong>Compounding.</strong> Money invested in year 1 has 25 years to grow.</li>
+      <li><strong>Dividends.</strong> Cash flow that helps cover HELOC interest.</li>
+    </ol>
+
+    <h3>The accelerator add-on</h3>
+    <p>If you also apply each year's tax refund to the mortgage:</p>
+    <ul>
+      <li>Mortgage gets paid off 3–7 years sooner</li>
+      <li>HELOC balance ends up the same (~$500K)</li>
+      <li>Investment portfolio ends up larger (more time to compound)</li>
+    </ul>
+
+    <h3>Risks (read these carefully)</h3>
+    <ol>
+      <li><strong>Market crash.</strong> Your portfolio can drop 40% while you still owe the full HELOC. Your net worth temporarily collapses. If you panic-sell, you lock in losses — strategy ruined.</li>
+      <li><strong>Interest rate spike.</strong> HELOCs are variable. Rate going from 6% to 12% doubles your interest cost.</li>
+      <li><strong>Job loss.</strong> You can't service the HELOC; you may have to liquidate investments at the worst possible moment.</li>
+      <li><strong>Loss of dividends.</strong> If your ETF stops paying dividends, the CRA could question the deduction.</li>
+      <li><strong>Discipline failure.</strong> Spending the HELOC on a vacation or car kills your tax-deduction status — and you've taken on debt for nothing.</li>
+      <li><strong>CRA audit.</strong> Co-mingling investment HELOC funds with personal funds in any way can disqualify the entire deduction. The paper trail must be airtight.</li>
+    </ol>
+
+    <h3>Who actually does this</h3>
+    <ul>
+      <li>High-income professionals (engineers, doctors, lawyers, senior corporate)</li>
+      <li>Household income $150,000+ with marginal tax rate 37%+</li>
+      <li>TFSA and RRSP already maxed (do those first)</li>
+      <li>15+ years until retirement</li>
+      <li>Stable dual-income households with 6+ month emergency fund</li>
+      <li>Investors who've lived through a 30%+ crash without panic-selling</li>
+    </ul>
+
+    <h3>Required minimums to actually benefit</h3>
+    <ul>
+      <li><strong>Income:</strong> $100,000 household minimum, $150,000+ ideal</li>
+      <li><strong>Marginal rate:</strong> 30%+ (below this, the deduction value is too small to justify the risk)</li>
+      <li><strong>Cash flow buffer:</strong> ability to absorb a 50% rate spike without distress</li>
+      <li><strong>Emergency fund:</strong> 6 months expenses, kept entirely outside the strategy</li>
+      <li><strong>Time:</strong> 15+ years for the compounding to do its work</li>
+    </ul>
+
+    <div class="verdict good">
+      <div class="verdict-label">Honest verdict</div>
+      <p style="margin:0;"><strong>A real strategy that builds real wealth — for the right person.</strong> Most Canadians shouldn't do it. Those who genuinely fit the profile and stick with it for 20–30 years tend to end up significantly wealthier than they would have otherwise.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PART 4 ============ -->
+  <section id="part-4">
+    <div class="section-num">Part 4</div>
+    <h2>Side-by-side comparison</h2>
+    <p class="h2-sub">Two strategies, very different profiles.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Factor</th>
+            <th>HELOC velocity banking</th>
+            <th>Smith Manoeuvre</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Goal</td><td>Pay off mortgage faster</td><td>Build wealth + pay off mortgage</td></tr>
+          <tr><td>Mechanism</td><td>Reduce daily HELOC interest</td><td>Convert non-deductible to deductible debt</td></tr>
+          <tr><td>Time horizon</td><td>5–10 years</td><td>20–30 years</td></tr>
+          <tr><td>Income required</td><td>Any</td><td>$100K+ household</td></tr>
+          <tr><td>Marginal tax rate needed</td><td>Doesn't matter</td><td>30%+ ideally</td></tr>
+          <tr><td>Investment knowledge</td><td>Low</td><td>Medium–high</td></tr>
+          <tr><td>Risk level</td><td>Low–medium</td><td>Medium–high</td></tr>
+          <tr><td>Annual benefit (rough)</td><td>$150–300</td><td>$1,500–12,000 (grows)</td></tr>
+          <tr><td>Final wealth impact</td><td>Marginal</td><td>$500K–$1M+ over 25 years</td></tr>
+          <tr><td>Beats just paying extra?</td><td>No</td><td>Yes (significantly)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PART 5 ============ -->
+  <section id="part-5">
+    <div class="section-num">Part 5</div>
+    <h2>Action checklist</h2>
+    <p class="h2-sub">Concrete steps if you're considering either path.</p>
+
+    <h3>If you're considering HELOC velocity banking</h3>
+    <p>Don't. Set up biweekly accelerated payments. Send any monthly surplus directly to mortgage as a prepayment. Done.</p>
+
+    <h3>If you're considering the Smith Manoeuvre</h3>
+    <ol>
+      <li>Confirm income and tax bracket make it worth doing (≥$100K household, ≥30% marginal rate)</li>
+      <li>Max your TFSA and RRSP first — those are tax-free/tax-deferred and beat Smith Manoeuvre on a risk-adjusted basis</li>
+      <li>Build 6 months emergency fund completely outside this plan</li>
+      <li>Refinance into a readvanceable mortgage if you don't have one</li>
+      <li>Talk to a fee-only financial planner — Ed Rempel is the recognized Canadian Smith Manoeuvre expert</li>
+      <li>Open a dedicated HELOC sub-account used <strong>only</strong> for investing</li>
+      <li>Open a non-registered investment account (separate from TFSA/RRSP)</li>
+      <li>Choose a dividend ETF (VDY, XEI, ZDV, or similar)</li>
+      <li>Automate the monthly process</li>
+      <li>Keep meticulous records — every transaction documented separately for CRA</li>
+    </ol>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PART 6 ============ -->
+  <section id="part-6">
+    <div class="section-num">Part 6</div>
+    <h2>Common questions</h2>
+    <p class="h2-sub">Quick answers to the questions that come up most often.</p>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I do this with my TFSA or RRSP?</div>
+      <p class="faq-a">No. CRA disallows interest deductibility on borrowed money invested in registered accounts.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What if I sell my house?</div>
+      <p class="faq-a">The HELOC must be paid off at sale. The investments stay yours.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What if my dividend ETF cuts its dividend?</div>
+      <p class="faq-a">The deduction continues as long as there's a <em>reasonable expectation</em> of income. A temporary dividend cut is usually fine; complete elimination is risky.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I deduct HELOC interest if I use HELOC funds to renovate my house?</div>
+      <p class="faq-a">No. Renovating your primary residence is personal use. Only <strong>income-producing</strong> uses qualify.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What about a rental property HELOC?</div>
+      <p class="faq-a">Different strategy ("debt swap" or "cash damming"). Same legal principle, different mechanics.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I do this with a US-listed ETF?</div>
+      <p class="faq-a">Yes, but you'll deal with USD conversion, foreign withholding tax, and slightly more complex tax reporting.</p>
+    </div>
+  </section>
+
+  <footer>
+    This guide is educational. Consult a fee-only financial advisor and a CPA before implementing the Smith Manoeuvre. CRA rules can change.
+  </footer>
+
+</div>
+</body>
+</html>
